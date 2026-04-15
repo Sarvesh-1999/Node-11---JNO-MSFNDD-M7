@@ -1,0 +1,21 @@
+{
+  "name": "node-11am",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sarvesh-1999/Node-11---JNO-MSFNDD-M7.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Sarvesh-1999/Node-11---JNO-MSFNDD-M7/issues"
+  },
+  "homepage": "https://github.com/Sarvesh-1999/Node-11---JNO-MSFNDD-M7#readme"
+}

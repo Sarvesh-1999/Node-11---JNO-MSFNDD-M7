@@ -178,3 +178,105 @@ displayData();
 * **`async/await`** is syntactic sugar on top of Promises. It makes asynchronous code look and behave a bit more like synchronous code, which makes it much easier to read.
 * **`await`** can only be used inside a function marked with the **`async`** keyword.
 * **Error Handling:** When using `async/await`, always wrap your logic in a `try...catch` block to handle potential Promise rejections, just as you would use `.catch()` in the traditional Promise chain.
+
+
+# 📦 Node.js Modules & File System (FS) – Comprehensive Guide
+
+## 📌 Introduction
+In Node.js, building an entire application in a single file quickly becomes unmanageable. To solve this, we split our code into **smaller, reusable parts called modules**.
+
+> 💡 **Analogy:** Think of modules like **Lego blocks**. You build small, independent pieces (like a piece of code that handles database connections or math operations) and snap them together to build a larger application.
+
+Node.js also comes with powerful built-in modules. One of the most important is the **File System (`fs`)** module, which allows your server to interact directly with the computer's hard drive to read, write, and manage files.
+
+---
+
+## 🧠 What are Modules?
+
+A **module** is a logical piece of isolated code. By keeping code inside a module, you protect its variables and functions from leaking into other parts of your app, preventing naming conflicts.
+
+### 📂 Types of Modules
+
+#### 1️⃣ Built-in Modules (Core Modules)
+These come pre-installed with Node.js. You don't need to download them; you just import them.
+* **`fs`**: File System (interacting with files).
+* **`http`**: Creating web servers.
+* **`path`**: Working with file and directory paths safely across different operating systems.
+
+#### 2️⃣ User-Defined Modules
+These are the files you write yourself. You can export logic from one file and import it into another.
+```js
+// math.js
+export const add = (a, b) => a + b;
+```
+
+#### 3️⃣ Third-Party Modules
+These are modules created by other developers and shared online. You download them using **npm** (Node Package Manager).
+* **Examples:** `express` (for web servers), `mongoose` (for MongoDB), `axios` (for fetching data).
+```bash
+npm install express
+```
+
+---
+
+## 🔄 Import & Export Methods
+
+Node.js historically used CommonJS, but modern JavaScript uses ES Modules. 
+
+### 📌 1. CommonJS (The Old Way)
+This uses the `require()` function.
+```js
+const fs = require("fs");
+```
+
+### 📌 2. ES Modules (The Modern Way)
+This uses `import` and `export` keywords. 
+```js
+import fs from "fs";
+```
+> ✅ **Recommended:** ES Modules are the modern standard. *Note: To use ES Modules in Node.js, you must add `"type": "module"` to your `package.json` file.*
+
+---
+
+## ⚙️ JavaScript Execution Types
+
+To understand the `fs` module, you must understand how Node.js reads code.
+
+* **Synchronous (Sync):** Executes **line by line**. The program stops and waits for the current operation to finish before moving to the next line. This is called "blocking" code.
+* **Asynchronous (Async):** Executes in the background. Node.js initiates the task and immediately moves to the next line of code. When the background task finishes, Node.js goes back to handle the result. This is "non-blocking."
+
+---
+
+## 📁 File System (`fs`) Module
+
+The `fs` module is used to perform **CRUD operations** (Create, Read, Update, Delete) on files and directories.
+
+### 🔹 1. Synchronous File Operations
+> ⚠️ **Warning:** Sync methods block the execution thread. If a file takes 3 seconds to read, your entire server freezes for 3 seconds. Use these only for simple scripts or during server startup, **never** in routes handling user requests.
+
+#### 📝 Create / Write File
+```js
+import fs from "fs";
+
+// Creates 'demo.txt' or overwrites it if it already exists
+fs.writeFileSync("./demo.txt", "Hello World");
+```
+
+#### 📖 Read File
+```js
+const data = fs.readFileSync("./demo.txt", "utf-8");
+console.log(data);
+```
+**🧠 Why do we need `"utf-8"`?**
+Computers store files in raw binary (0s and 1s), which Node reads as a `Buffer`. Passing the `"utf-8"` encoding argument tells Node to translate that binary buffer back into human-readable text. Without it, `console.log(data)` would print something like `<Buffer 48 65 6c 6c 6f... >`.
+
+#### ➕ Append (Update File)
+Adds new text to the end of an existing file without deleting what is already there.
+```js
+fs.appendFileSync("./demo.txt", "\nThis is a new line");
+```
+
+#### ❌ Delete File
+```js
+fs.unlinkSync("./demo.txt");
+```
