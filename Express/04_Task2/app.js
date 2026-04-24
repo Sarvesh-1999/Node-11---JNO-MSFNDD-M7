@@ -70,7 +70,37 @@ app.get("/get-book/:id", (req, res) => {
   });
 });
 
+//---> UPDATE A BOOK
+app.put("/update-book/:id", (req, res) => {
+  let bookID = Number(req.params.id);
+  let bookToBeUpdated = Books.find((ele) => ele.id === bookID);
+  bookToBeUpdated.title = req.body.title;
 
+  res.status(200).json({
+    message: "Book Updated",
+    data: bookToBeUpdated,
+  });
+});
+
+//---> DELETE A BOOK
+app.delete("/delete-book/:id", (req, res) => {
+  let bookID = Number(req.params.id);
+
+  let index = Books.findIndex((ele) => ele.id === bookID);
+
+  if (index === -1) {
+    res.status(400).json({
+      message: "Book Not Found",
+    });
+  }
+
+  Books.splice(index, 1);
+
+  res.status(200).json({
+    message: "Book deleted",
+    data: Books,
+  });
+});
 
 app.listen(PORT, (err) => {
   if (err) console.log(err);
