@@ -1,5 +1,6 @@
 import Users from "../models/user-model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export async function handleRegister(req, res) {
   if (!req.body) {
@@ -58,4 +59,49 @@ export async function handleRegister(req, res) {
   }
 }
 
-export async function handleLogin(req, res) {}
+export async function handleLogin(req, res) {
+  try {
+    let { email, password } = req.body;
+
+    let user = await Users.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found! please register first",
+      });
+    }
+
+    // compare password
+    let isPasswordMatched = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatched) {
+      return res.status(400).json({
+        success: false,
+        message: "Password mismatched",
+      });
+    }
+
+    // create a token --> accessToken
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" },
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "login successful",
+      accessToken,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+}
